@@ -82,6 +82,16 @@ foreach ($attachments as $attachment):
 		$thumbnail = $this->Html->link($imgUrl, $path,
 			array('escape' => false, 'class' => 'thickbox', 'title' => $attachment['AssetsAttachment']['title'])
 		);
+
+	elseif ($mimeType == 'application') :
+		$imagePath = pathinfo($attachment['AssetsAsset']['path']);
+		$imgUrl = $this->AssetsImage->resize($imagePath['dirname'] .'/'. $imagePath['filename'] . '.jpg', 100, 200,
+			array('adapter' => $attachment['AssetsAsset']['adapter']),
+			array('alt' => $attachment['AssetsAttachment']['title'])
+		);
+		$thumbnail = $this->Html->link($imgUrl, $path,
+			array('escape' => false, 'class' => 'thickbox', 'title' => $attachment['AssetsAttachment']['title'])
+		);
 	else:
 		$imgUrl = $this->Html->image('/croogo/img/icons/page_white.png') . ' ' . $attachment['AssetsAsset']['filename'];
 		$thumbnail = $this->Html->link($imgUrl,

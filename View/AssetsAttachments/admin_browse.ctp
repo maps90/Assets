@@ -244,6 +244,15 @@ $this->append('table-body');
 					)
 				);
 			endif;
+		} else if ($mimeType == 'application') {
+			$imagePath = pathinfo($attachment['AssetsAsset']['path']);
+			$imgUrl = $this->AssetsImage->resize($imagePath['dirname'] .'/'. $imagePath['filename'] . '.jpg', 100, 200,
+				array('adapter' => $attachment['AssetsAsset']['adapter']),
+				array('alt' => $attachment['AssetsAttachment']['title'])
+			);
+			$thumbnail = $this->Html->link($imgUrl, $attachment['AssetsAsset']['path'],
+				array('escape' => false, 'class' => 'thickbox', 'title' => $attachment['AssetsAttachment']['title'])
+			);
 		} else {
 			$thumbnail = $this->Html->image('/croogo/img/icons/page_white.png') . ' ' . $attachment['AssetsAsset']['mime_type'] . ' (' . $this->Filemanager->filename2ext($attachment['AssetsAttachment']['slug']) . ')';
 			$thumbnail = $this->Html->link($thumbnail, '#', array(

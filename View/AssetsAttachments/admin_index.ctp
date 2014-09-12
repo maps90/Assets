@@ -55,6 +55,7 @@ $this->append('table-body');
 
 		$mimeType = explode('/', $attachment['AssetsAsset']['mime_type']);
 		$mimeType = $mimeType['0'];
+		$assetCount = 0;
 		if ($mimeType == 'image') {
 			$detailUrl['?']['foreign_key'] = $attachment['AssetsAttachment']['id'];
 			$detailUrl['?']['asset_id'] = $attachment['AssetsAsset']['id'];
@@ -75,12 +76,13 @@ $this->append('table-body');
 				array('?' => $query)
 			);
 		}
-
-		$actions[] = $this->Croogo->adminRowAction('', $resizeUrl, array(
-			'icon' => 'resize-small',
-			'tooltip' => __d('croogo', 'Resize this item'),
-			'data-toggle' => 'resize-asset'
-		));
+		if ($mimeType !== 'application') {
+			$actions[] = $this->Croogo->adminRowAction('', $resizeUrl, array(
+				'icon' => 'resize-small',
+				'tooltip' => __d('croogo', 'Resize this item'),
+				'data-toggle' => 'resize-asset'
+			));
+		}
 		$editUrl = array_merge(
 			array('action' => 'edit', $attachment['AssetsAttachment']['id']),
 			array('?' => $query)
@@ -91,13 +93,23 @@ $this->append('table-body');
 		$deleteUrl = array('action' => 'delete', $attachment['AssetsAttachment']['id']);
 		$deleteUrl = array_merge(array('?' => $query), $deleteUrl);
 		$actions[] = $this->Croogo->adminRowAction('', $deleteUrl,
-			array('icon' => 'trash', 'tooltip' => __d('croogo', 'Remove this item')),
+			array('icon' => $_icons['delete'], 'tooltip' => __d('croogo', 'Remove this item')),
 			__d('croogo', 'Are you sure?'));
 
 		$path = $attachment['AssetsAsset']['path'];
 		if ($mimeType == 'image') {
 
 			$imgUrl = $this->AssetsImage->resize($path, 100, 200,
+				array('adapter' => $attachment['AssetsAsset']['adapter']),
+				array('alt' => $attachment['AssetsAttachment']['title'])
+			);
+			$thumbnail = $this->Html->link($imgUrl, $path,
+				array('escape' => false, 'class' => 'thickbox', 'title' => $attachment['AssetsAttachment']['title'])
+			);
+
+		} elseif ($mimeType == 'application') {
+			$imagePath = pathinfo($attachment['AssetsAsset']['path']);
+			$imgUrl = $this->AssetsImage->resize($imagePath['dirname'] .'/'. $imagePath['filename'] . '.jpg', 100, 200,
 				array('adapter' => $attachment['AssetsAsset']['adapter']),
 				array('alt' => $attachment['AssetsAttachment']['title'])
 			);
