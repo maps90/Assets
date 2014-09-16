@@ -139,9 +139,23 @@ foreach ($attachments as $attachment):
 			'data-value' => 'FeaturedImage',
 			'tooltip' => __d('assets', 'Set as FeaturedImage'),
 		));
-
 		$action[] = $this->Croogo->adminRowAction('', $unregisterUsageUrl, array(
 			'icon' => 'trash',
+			'class' => 'unregister-usage',
+			'data-id' => $attachment['AssetsAssetUsage']['id'],
+			'tooltip' => __d('assets', 'Unregister asset from this resource'),
+		));
+
+	elseif ($mimeType === 'application') :
+		$action[] = $this->Croogo->adminRowAction('', $changeTypeUrl, array(
+			'icon' => 'star',
+			'class' => 'change-usage-type',
+			'data-pk' => $attachment['AssetsAssetUsage']['id'],
+			'data-value' => 'FeaturedImage',
+			'tooltip' => __d('assets', 'Set as FeaturedImage'),
+		));
+		$action[] = $this->Croogo->adminRowAction('', $unregisterUsageUrl, array(
+			'icon' => $_icons['delete'],
 			'class' => 'unregister-usage',
 			'data-id' => $attachment['AssetsAssetUsage']['id'],
 			'tooltip' => __d('assets', 'Unregister asset from this resource'),
